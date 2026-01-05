@@ -3,9 +3,8 @@
 //! Composes all application routes into a single router.
 
 use axum::{
-    middleware,
+    Router, middleware,
     routing::{get, post},
-    Router,
 };
 
 use crate::config::AppState;

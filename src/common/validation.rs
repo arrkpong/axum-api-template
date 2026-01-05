@@ -1,4 +1,4 @@
-//! Validation utilities
+#![allow(dead_code)]
 
 use validator::Validate;
 
@@ -6,7 +6,7 @@ use crate::api::error::ApiError;
 
 /// Validate a request body and return an ApiError if invalid
 pub fn validate_request<T: Validate>(data: &T) -> Result<(), ApiError> {
-    data.validate().map_err(|e| ApiError::from(e))
+    data.validate().map_err(ApiError::from)
 }
 
 /// Common validation patterns

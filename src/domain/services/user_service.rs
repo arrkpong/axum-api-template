@@ -28,6 +28,7 @@ impl<'a> UserService<'a> {
     }
 
     /// Get user by email
+    #[allow(dead_code)]
     pub async fn get_by_email(&self, email: &str) -> Result<User, DomainError> {
         self.user_repo
             .find_by_email(email)

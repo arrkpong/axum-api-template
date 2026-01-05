@@ -31,6 +31,7 @@ struct ErrorBody {
     code: Option<String>,
 }
 
+#[allow(dead_code)]
 impl ApiError {
     pub fn new(status: StatusCode, message: impl Into<String>) -> Self {
         Self {

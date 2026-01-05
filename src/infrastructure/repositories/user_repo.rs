@@ -9,6 +9,7 @@ pub struct UserRepository<'a> {
     pool: &'a PgPool,
 }
 
+#[allow(dead_code)]
 impl<'a> UserRepository<'a> {
     pub fn new(pool: &'a PgPool) -> Self {
         Self { pool }
@@ -22,13 +23,13 @@ impl<'a> UserRepository<'a> {
             VALUES ($1, $2, $3, $4, $5, $6, $7)
             "#,
         )
-        .bind(&user.id)
+        .bind(user.id)
         .bind(&user.email)
         .bind(&user.password_hash)
         .bind(&user.name)
-        .bind(&user.is_active)
-        .bind(&user.created_at)
-        .bind(&user.updated_at)
+        .bind(user.is_active)
+        .bind(user.created_at)
+        .bind(user.updated_at)
         .execute(self.pool)
         .await?;
 
@@ -72,7 +73,7 @@ impl<'a> UserRepository<'a> {
             WHERE id = $1
             "#,
         )
-        .bind(&user.id)
+        .bind(user.id)
         .bind(&user.email)
         .bind(&user.name)
         .execute(self.pool)
