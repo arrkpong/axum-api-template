@@ -13,6 +13,7 @@ A production-ready [Axum](https://github.com/tokio-rs/axum) template with:
 - **Database** (PostgreSQL + SQLx)
 - **Docker** (Multi-stage build + Compose)
 - **Auto Migrations** (Runs on startup)
+- **OpenAPI/Swagger** (Documentation built-in)
 
 ## 🚀 Quick Start
 
@@ -37,9 +38,15 @@ A production-ready [Axum](https://github.com/tokio-rs/axum) template with:
    _That's it! The server will start, create the database, and run migrations automatically._
 
 4. **Verify**
+
    ```bash
    curl http://localhost:3000/api/v1/health
    ```
+
+5. **API Documentation 📚**
+
+   Open your browser and visit:
+   `http://localhost:3000/swagger-ui`
 
 ## 🛠️ Development
 

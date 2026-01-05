@@ -8,27 +8,31 @@ use axum::{
     response::{IntoResponse, Response},
 };
 use serde::Serialize;
+use utoipa::ToSchema;
 
 /// Unified API error type
-#[derive(Debug)]
+#[derive(Debug, ToSchema)]
 pub struct ApiError {
+    #[schema(value_type = u16, example = 500)]
     pub status: StatusCode,
+    #[schema(example = "Internal server error")]
     pub message: String,
+    #[schema(example = "INTERNAL_ERROR")]
     pub error_code: Option<String>,
 }
 
 /// JSON response body for errors
-#[derive(Serialize)]
-struct ErrorResponse {
-    success: bool,
-    error: ErrorBody,
+#[derive(Serialize, ToSchema)]
+pub struct ErrorResponse {
+    pub success: bool,
+    pub error: ErrorBody,
 }
 
-#[derive(Serialize)]
-struct ErrorBody {
-    message: String,
+#[derive(Serialize, ToSchema)]
+pub struct ErrorBody {
+    pub message: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    code: Option<String>,
+    pub code: Option<String>,
 }
 
 #[allow(dead_code)]

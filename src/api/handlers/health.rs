@@ -5,14 +5,27 @@ use serde::Serialize;
 
 use crate::config::AppState;
 
-#[derive(Serialize)]
+use utoipa::ToSchema;
+
+#[derive(Serialize, ToSchema)]
 pub struct HealthResponse {
+    #[schema(example = "healthy")]
     pub status: String,
+    #[schema(example = "0.1.0")]
     pub version: String,
+    #[schema(example = "connected")]
     pub database: String,
 }
 
 /// Health check endpoint
+#[utoipa::path(
+    get,
+    path = "/health",
+    tag = "system",
+    responses(
+        (status = 200, description = "System is healthy", body = HealthResponse)
+    )
+)]
 pub async fn health_check(State(state): State<AppState>) -> Json<HealthResponse> {
     // Check database connectivity
     let db_status = match sqlx::query("SELECT 1").fetch_one(&state.db_pool).await {

@@ -2,6 +2,7 @@
 
 use axum::{Json, extract::State};
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 use validator::Validate;
 
 use crate::{api::error::ApiError, config::AppState, domain::services::AuthService};
@@ -10,30 +11,35 @@ use crate::{api::error::ApiError, config::AppState, domain::services::AuthServic
 // Request/Response DTOs
 // ============================================================================
 
-#[derive(Debug, Deserialize, Validate)]
+#[derive(Debug, Deserialize, Validate, ToSchema)]
 pub struct RegisterRequest {
     #[validate(email(message = "Invalid email format"))]
+    #[schema(example = "user@example.com")]
     pub email: String,
     #[validate(length(min = 8, message = "Password must be at least 8 characters"))]
+    #[schema(example = "password123")]
     pub password: String,
     #[validate(length(min = 1, message = "Name is required"))]
+    #[schema(example = "John Doe")]
     pub name: String,
 }
 
-#[derive(Debug, Deserialize, Validate)]
+#[derive(Debug, Deserialize, Validate, ToSchema)]
 pub struct LoginRequest {
     #[validate(email)]
+    #[schema(example = "user@example.com")]
     pub email: String,
+    #[schema(example = "password123")]
     pub password: String,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, ToSchema)]
 pub struct AuthResponse {
     pub success: bool,
     pub data: AuthData,
 }
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, ToSchema)]
 pub struct AuthData {
     pub token: String,
     pub token_type: String,
@@ -45,6 +51,17 @@ pub struct AuthData {
 // ============================================================================
 
 /// Register a new user
+#[utoipa::path(
+    post,
+    path = "/auth/register",
+    tag = "auth",
+    request_body = RegisterRequest,
+    responses(
+        (status = 200, description = "Registration successful", body = AuthResponse),
+        (status = 400, description = "Validation error", body = ApiError),
+        (status = 409, description = "Email already exists", body = ApiError)
+    )
+)]
 pub async fn register(
     State(state): State<AppState>,
     Json(payload): Json<RegisterRequest>,
@@ -69,6 +86,17 @@ pub async fn register(
 }
 
 /// Login with email and password
+#[utoipa::path(
+    post,
+    path = "/auth/login",
+    tag = "auth",
+    request_body = LoginRequest,
+    responses(
+        (status = 200, description = "Login successful", body = AuthResponse),
+        (status = 400, description = "Validation error", body = ApiError),
+        (status = 401, description = "Invalid credentials", body = ApiError)
+    )
+)]
 pub async fn login(
     State(state): State<AppState>,
     Json(payload): Json<LoginRequest>,

@@ -6,6 +6,7 @@
 //! - Middleware (authentication, logging, etc.)
 //! - Error handling
 
+pub mod docs;
 pub mod error;
 pub mod handlers;
 pub mod middleware;
