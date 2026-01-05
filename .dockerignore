@@ -1,0 +1,39 @@
+# Build artifacts
+target/
+*.pdb
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Environment (keep .env.example)
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+README.md
+LICENSE
+docs/
+
+# SQLx
+.sqlx/
+
+# Coverage
+*.profraw
+*.profdata
+coverage/

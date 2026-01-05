@@ -1,0 +1,51 @@
+services:
+  # ==========================================================================
+  # PostgreSQL Database
+  # ==========================================================================
+  db:
+    image: postgres:18-alpine
+    container_name: axum-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-axum}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-axum_secret}
+      POSTGRES_DB: ${POSTGRES_DB:-axum_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-axum} -d ${POSTGRES_DB:-axum_db}",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ==========================================================================
+  # Axum API Server
+  # ==========================================================================
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: axum-api
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      HOST: 0.0.0.0
+      PORT: 3000
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      DATABASE_URL: postgres://${POSTGRES_USER:-axum}:${POSTGRES_PASSWORD:-axum_secret}@db:5432/${POSTGRES_DB:-axum_db}
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      JWT_EXPIRATION_HOURS: ${JWT_EXPIRATION_HOURS:-24}
+      RUST_LOG: ${RUST_LOG:-axum_api=debug,tower_http=debug}
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

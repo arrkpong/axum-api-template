@@ -1,0 +1,33 @@
+# Generated files
+/target/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# SQLx offline mode
+.sqlx/
+
+# Debug
+*.pdb
+
+# Coverage
+*.profraw
+*.profdata
+coverage/
