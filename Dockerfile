@@ -46,7 +46,7 @@ RUN apt-get update && apt-get install -y \
 RUN useradd -m -U -s /bin/false appuser
 
 # Copy binary from builder
-COPY --from=builder /app/target/release/axum-api /app/axum-api
+COPY --from=builder /app/target/release/axum-api-template /app/axum-api-template
 
 # Copy migrations (optional, for sqlx migrate)
 COPY --from=builder /app/migrations /app/migrations
@@ -64,4 +64,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:3000/api/v1/health || exit 1
 
 # Run the application
-CMD ["./axum-api"]
+CMD ["./axum-api-template"]
